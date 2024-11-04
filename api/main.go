@@ -1,15 +1,29 @@
 package main
 
-import "github.com/gin-gonic/gin"
+import (
+	"github.com/gin-gonic/gin"
+	"github.com/knight-tara/docu-cat/config"
+	"github.com/knight-tara/docu-cat/controllers"
+	"github.com/knight-tara/docu-cat/models"
+)
 
 func main() {
+
+	config.LoadEnvironmentVariables()
+	config.ConnectToDatabase()
+
+	// Migrate database schema
+	config.DB.AutoMigrate(&models.User{})
+
 	r := gin.Default()
-	r.GET("/", func(c *gin.Context) {
-		c.JSON(200, gin.H{
-			"message": "pong",
-		})
-	})
-	r.Run() // listen and serve on 0.0.0.0:8080
+
+	r.POST("/", controllers.CreateUser)
+	r.GET("/", controllers.GetAllUsers)
+	r.GET("/:id", controllers.GetUser)
+	r.PUT("/:id", controllers.UpdateUser)
+	r.DELETE("/:id", controllers.DeleteUser)
+
+	r.Run() 
 }
 
 
