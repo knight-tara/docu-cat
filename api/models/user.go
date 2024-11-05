@@ -14,6 +14,7 @@ type User struct {
 	Surname string
 	EmailAddress string
 	DateOfBirth string
+	ContractFilePath string
 }
 
 // *time.Time nullable

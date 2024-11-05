@@ -16,12 +16,18 @@ func main() {
 	config.DB.AutoMigrate(&models.User{})
 
 	r := gin.Default()
+	r.Static("/assets", "./assets")
 
-	r.POST("/", controllers.CreateUser)
-	r.GET("/", controllers.GetAllUsers)
-	r.GET("/:id", controllers.GetUser)
-	r.PUT("/:id", controllers.UpdateUser)
-	r.DELETE("/:id", controllers.DeleteUser)
+	// Authorised accounts
+	authorized := r.Group("/admin", gin.BasicAuth(gin.Accounts{
+		"adminuser": "adminpassword",
+	}))
+
+	authorized.POST("/", controllers.CreateUser)
+	authorized.GET("/", controllers.GetAllUsers)
+	authorized.GET("/:id", controllers.GetUser)
+	authorized.PUT("/:id", controllers.UpdateUser)
+	authorized.DELETE("/:id", controllers.DeleteUser)
 
 	r.Run() 
 }

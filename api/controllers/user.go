@@ -1,6 +1,8 @@
 package controllers
 
 import (
+	"mime/multipart"
+
 	"github.com/gin-gonic/gin"
 	"github.com/knight-tara/docu-cat/config"
 	"github.com/knight-tara/docu-cat/models"
@@ -8,20 +10,27 @@ import (
 
 func CreateUser(c *gin.Context) {
 
-	// struct to store req body
+	// struct for binding req body
 	var body struct {
 		FirstName string
 		Surname string
 		EmailAddress string
 		DateOfBirth string
+		Contract *multipart.FileHeader
 	}
 	c.Bind(&body)
+
+	contractFilePath := "./assets/"+body.Contract.Filename
+
+	c.SaveUploadedFile(body.Contract, contractFilePath)
 
 	user := models.User{
 		FirstName: body.FirstName,
 		Surname: body.Surname,
 		EmailAddress: body.EmailAddress,
-		DateOfBirth: body.DateOfBirth}
+		DateOfBirth: body.DateOfBirth,
+		ContractFilePath: contractFilePath ,
+	}
 
 	result := config.DB.Create(&user)
 
@@ -55,6 +64,8 @@ func GetUser(c *gin.Context) {
 		"user": user,
 	})
 }
+
+//TO DO: work out how to update user file!
 
 func UpdateUser(c *gin.Context) {
 	// get ID from URL 
