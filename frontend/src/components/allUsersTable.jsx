@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { getAllUsers } from '../services/user';
 
 
-export const GetAllUsers = ({ onUpdateUser }) => {
+export const GetAllUsers = () => {
     const [users, setUsers] = useState([]);
     const [loading, setLoading] = useState(true);
 
@@ -23,10 +23,6 @@ export const GetAllUsers = ({ onUpdateUser }) => {
         } finally {
             setLoading(false);
         }
-    };
-
-    const determineSelectedUser = (user) => {
-        onUpdateUser(user)
     };
     
     if (loading) return <div>Loading ...</div>
@@ -54,7 +50,7 @@ export const GetAllUsers = ({ onUpdateUser }) => {
                         <td>{user.Surname}</td>
                         <td>{user.EmailAddress}</td>
                         <td>{user.DateOfBirth}</td>
-                        <td><button onClick={determineSelectedUser}><MdEdit /></button></td>
+                        <td><button><MdEdit /></button></td>
                         <td><button><MdDelete /></button></td>
                     </tr>
                 ))}
