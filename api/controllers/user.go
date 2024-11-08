@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"fmt"
 	"mime/multipart"
 
 	"github.com/gin-gonic/gin"
@@ -18,7 +19,9 @@ func CreateUser(c *gin.Context) {
 		DateOfBirth string
 		Contract *multipart.FileHeader
 	}
-	c.Bind(&body)
+	c.ShouldBind(&body)
+
+	fmt.Println(body)
 
 	contractFilePath := "./assets/"+body.Contract.Filename
 
