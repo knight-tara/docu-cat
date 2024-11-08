@@ -1,13 +1,15 @@
 import { useState } from "react";
-import { createUser } from '../services/user'
+import { createUser } from '../services/user';
+import ModalDialog from "../components/modalDialog";
 
-export const CreateUser = () => {
+export const CreateUser = ({ createUserModalOpen, closeCreateUserModal}) => {
 
     const [firstName, setFirstName] = useState("");
     const [surname, setSurname] = useState("");
     const [emailAddress, setEmailAddress] = useState("");
     const [dateOfBirth, setDateOfBirth] = useState("");
     const [contract, setContract] = useState(null);
+
 
     const handleSubmit = async (e) => {
 
@@ -25,6 +27,7 @@ export const CreateUser = () => {
 
         try {
             await createUser(userInput);
+            closeCreateUserModal();
 
         } catch (err) {
             console.error(err);
@@ -33,8 +36,9 @@ export const CreateUser = () => {
 
     return (
         <>
+        <ModalDialog isOpen={createUserModalOpen} onClose={closeCreateUserModal} submit={handleSubmit}>
         <h2>Create User</h2>
-        <form>
+        <form onSubmit={handleSubmit}>
 
             <label>First Name:
                 <input 
@@ -80,10 +84,8 @@ export const CreateUser = () => {
                 onChange={(e) => setContract(e.target.files[0])}
                 />
             </label>
-
-            <button onClick={handleSubmit}>Create User</button>
-
         </form>
+        </ModalDialog>
         </>
     );
 };

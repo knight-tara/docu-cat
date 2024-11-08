@@ -2,18 +2,18 @@ const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 const USERNAME = import.meta.env.VITE_USERNAME;
 const PASSWORD = import.meta.env.VITE_PASSWORD;
 
+let auth = btoa(`${USERNAME}:${PASSWORD}`);
+
 // Create User
 
 export const createUser = async (userInput) => {
 
     const formData = new FormData();
-    formData.append("Firstname", userInput.firstName);
+    formData.append("FirstName", userInput.firstName);
     formData.append("Surname", userInput.surname);
     formData.append("EmailAddress", userInput.emailAddress);
     formData.append("DateOfBirth", userInput.dateOfBirth);
     formData.append("Contract", userInput.contract);
-
-    let auth = btoa(`${USERNAME}:${PASSWORD}`);
 
     const requestOptions = {
         method: "POST",
@@ -25,7 +25,7 @@ export const createUser = async (userInput) => {
 
     const response = await fetch(`${BACKEND_URL}/admin/`, requestOptions);
 
-    if (response.status !== 201) {
+    if (response.status !== 200) {
         throw new Error("Unable to create user");
     }
 
@@ -36,29 +36,26 @@ export const createUser = async (userInput) => {
 
 // Get All Users
 
-// export const getAllUsers = async () => {
+export const getAllUsers = async () => {
 
-//     let auth = btoa(`${USERNAME}:${PASSWORD}`);
+    const requestOptions = {
+        method: "GET",
+        headers: {
+            Authorization: `Basic ${auth}`
+        },
+    };
 
-//     const requestOptions = {
-//         method: "GET",
-//         headers: {
-//             Authorization: `Basic ${auth}`
-//         },
-//     };
+    const response = await fetch(`${BACKEND_URL}/admin/`, requestOptions);
 
-//     const response = await fetch(`${BACKEND_URL}/admin/`, requestOptions);
+    if (response.status !== 200) {
+        throw new Error("Unable to fetch users!");
+    }
 
-//     console.log(response);
+    const data = await response.json();
 
-//     if (response.status !== 201) {
-//         throw new Error("Unable to retrieve all users");
-//     }
+    return data;
 
-//     const data = await response.json();
-
-//     return data;
-// };
+};
 
 // Get User
 

@@ -1,7 +1,6 @@
 package controllers
 
 import (
-	"fmt"
 	"mime/multipart"
 
 	"github.com/gin-gonic/gin"
@@ -20,8 +19,6 @@ func CreateUser(c *gin.Context) {
 		Contract *multipart.FileHeader
 	}
 	c.ShouldBind(&body)
-
-	fmt.Println(body)
 
 	contractFilePath := "./assets/"+body.Contract.Filename
 
@@ -42,7 +39,7 @@ func CreateUser(c *gin.Context) {
 		return
 	}
 
-	c.JSON(200, gin.H{
+	c.JSON(201, gin.H{
 		"user": user,
 	})
 }
@@ -81,7 +78,7 @@ func UpdateUser(c *gin.Context) {
 		EmailAddress string
 		DateOfBirth string
 	}
-	c.Bind(&body)
+	c.ShouldBind(&body)
 
 	var user models.User
 	config.DB.First(&user, id)
